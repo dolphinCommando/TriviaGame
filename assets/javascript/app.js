@@ -2,7 +2,7 @@
 $(document).ready(function() {
 
     var trivia = [
-        {question: 'This bird is popular in cooking, but eating it can cause an illness known as "coturnism" which is the result of the bird feeding on hemlock.', 
+        {question: 'This bird is popular in cooking, but the meal can give people "coturnism," which causes acute rhabdomyolysis, and is the result of this bird eating hemlock on migratory routes.', 
         options: ['Goose', 'Duck', 'Turkey', 'Quail'],
         answer: 'Quail',
         image: 'assets/images/quail.jpg'}, 
@@ -17,6 +17,17 @@ $(document).ready(function() {
         answer: 'New Zealand',
         image: 'assets/images/kea.jpg'},
 
+        {question: 'During the Four Pests Campaign, Mao Zedong commanded the people of China to scare them away by banging pots, and the birds flew until exhausted. As a result, agricultural pests exploded in population, and 35 million Chinese died of starvation.',
+        options: ['Finch', 'Seagull', 'Sparrow', 'Crane'],
+        answer: 'Sparrow',
+        image: 'assets/images/sparrow.jpg'},
+
+        {question: 'Serious bird-watchers call themselves "birders," and many of them keep a "life-list" of all the species they have seen in their lifetime. On Earth, there are over 10,000 species of birds. How many species have the most prolific birders collected on their "life-lists"?',
+        options: ['500', '3000', '6000', 'Over 9000'],
+        answer: 'Over 9000',
+        image: 'assets/images/birder.jpg'},
+
+
         {question: 'What is the airspeed velocity of an un-laden swallow?', 
         options: ['60 km/hr', '42', '1,192 km/hr', 'What do you mean, an African or European swallow?'],
         answer: 'What do you mean, an African or European swallow?',
@@ -30,36 +41,40 @@ $(document).ready(function() {
     var questionsCorrect;
 
     $('body').on('click', '.start', function() {
-        console.log('Game started.')
+        //console.log('Game started.')
         triviaIndex = 0;
-        timerCount = 30;
         questionsCorrect = 0;
         setTimeout(function() {
             $('.game').empty();
-            $('.game').html('<p class="timer"></p>');
+            $('.game').html(`<p class="timer"></p>`);
             $('.game').append('<div class="board"></div>');
-            startClock();
+            startClock();   
             renderTrivia();
-        }, 500);
+        }, 50);
         
     });
 
     function startClock() {
+        timerCount = 15;
+        clearInterval(timerID);
         timerID = setInterval(function() {
-            $('.timer').text(`You have ${timerCount} seconds left.`);
-            timerCount--;
+            $('.timer').text(`Time remaining: ${timerCount} seconds.`);
+            if (!gameIsComplete()) {
+                timerCount--;
+            }    
         }, 1000);
     }
 
     function renderTrivia() {
-        $('.board').html(`<p>${trivia[triviaIndex].question}</p>`);
+        $('.board').html(`<p class="question">${trivia[triviaIndex].question}</p>`);
+        $('.board').append('<ol type="A"></ol>')
         trivia[triviaIndex].options.forEach(function(element) {
-            $('.board').append(`<p class="clickable">${element}</p>`);
+            $('.board ol').append(`<li class="clickable">${element}</li>`);
         });
     }
 
     $('body').on('click', '.clickable', function() {
-        $('.board').html(`Your answer was ${$(this).text()}. The correct answer is ${trivia[triviaIndex].answer}`);
+        $('.board').html(`<h2>${questionIsCorrect($(this).text())}</h2><p>Your answer was ${$(this).text()}. The correct answer is ${trivia[triviaIndex].answer}.</p>`);
         $('.board').append(`<div><img src="${trivia[triviaIndex].image}"></div>`);
         clearInterval(timerID);
         setTimeout(function() {
@@ -68,7 +83,7 @@ $(document).ready(function() {
             if (!gameIsComplete()) {
                 renderTrivia();
             }
-        }, 1000);
+        }, 2000);
         
     });
 
@@ -79,6 +94,13 @@ $(document).ready(function() {
             $('.board').append('<div><button class="start">New Game</button></div>');
             return true;
         } else {return false;}
+    }
+
+    function questionIsCorrect(text) {
+        if (text === trivia[triviaIndex].answer) {
+            questionsCorrect++;
+            return 'Correct!';
+        } else return 'Nope!';
     }
 
 

@@ -1,9 +1,11 @@
 body {
     background-color:lightblue;
+    background-image: url("../images/flamingos.jpg");
     padding: 10px;
     font-family: "Courier New", Courier, monospace;
     line-height: 25px;
     font-size: 16px;
+
 
 }
 
@@ -29,21 +31,27 @@ body {
 
 
 button {
-    padding: 15px 30px;
-    background-color:red;
+    padding: 25px 40px;
+    background-color: #FF727A;
     cursor: pointer;
     margin: 10px auto;
+    color: white;
+    font-size: 1.25rem;
 }
 
 
 img {
     width: 400px;
     height: 300px;
-
+    padding: 20px;
 }
-
+.question {
+    font-size: 1.25rem;
+}
+.board ol {
+    padding-left: 60px;
+}
 .clickable:hover {
     cursor: pointer;
-    background-color: lightgreen;
-    color: red;
+    color: #FF727A;
 }
