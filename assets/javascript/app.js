@@ -55,13 +55,14 @@ $(document).ready(function() {
     });
 
     function startClock() {
-        timerCount = 15;
+        timerCount = 20;
         clearInterval(timerID);
+        $('.timer').text(`Time remaining: ${timerCount--} seconds.`);
         timerID = setInterval(function() {
-            $('.timer').text(`Time remaining: ${timerCount} seconds.`);
-            if (!gameIsComplete()) {
-                timerCount--;
-            }    
+            $('.timer').text(`Time remaining: ${timerCount--} seconds.`);
+            if (timerCount<0) {
+                showAnswer('timeup');
+            }   
         }, 1000);
     }
 
@@ -74,7 +75,15 @@ $(document).ready(function() {
     }
 
     $('body').on('click', '.clickable', function() {
-        $('.board').html(`<h2>${questionIsCorrect($(this).text())}</h2><p>Your answer was ${$(this).text()}. The correct answer is ${trivia[triviaIndex].answer}.</p>`);
+        showAnswer($(this).text());
+    });
+
+    function showAnswer(userAnswer) {
+        if (userAnswer==='timeup') {
+            $('.board').html(`<h2>${questionIsCorrect(userAnswer)}</h2><p>You are out of time! The correct answer is ${trivia[triviaIndex].answer}.</p>`);
+        } else {
+            $('.board').html(`<h2>${questionIsCorrect(userAnswer)}</h2><p>Your answer was ${userAnswer}. The correct answer is ${trivia[triviaIndex].answer}.</p>`);
+        }
         $('.board').append(`<div><img src="${trivia[triviaIndex].image}"></div>`);
         clearInterval(timerID);
         setTimeout(function() {
@@ -85,10 +94,10 @@ $(document).ready(function() {
             }
         }, 2000);
         
-    });
+    }
 
     function gameIsComplete() {
-        if ((timerCount <= 0) || (triviaIndex === trivia.length)) {
+        if (triviaIndex === trivia.length) {
             $('.board').html(`Game Over. You got ${questionsCorrect} questions right out of ${trivia.length} questions.`);
             clearInterval(timerID);
             $('.board').append('<div><button class="start">New Game</button></div>');
