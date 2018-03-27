@@ -17,10 +17,10 @@ $(document).ready(function() {
         answer: 'New Zealand',
         image: 'assets/images/kea.jpg'},
 
-        {question: 'During the Four Pests Campaign, Mao Zedong commanded the people of China to scare this bird away by banging pots, and the birds died from exhaustion. As a result, agricultural pests exploded in population, and 35 million Chinese died of starvation.',
-        options: ['Finch', 'Seagull', 'Sparrow', 'Crane'],
-        answer: 'Sparrow',
-        image: 'assets/images/sparrow.jpg'},
+        {question: 'Birds evolved from:',
+        options: ['Fish', 'Lizards', 'Dinosaurs', 'Mammals'],
+        answer: 'Dinosaurs',
+        image: 'assets/images/trex.gif'},
         
         {question: 'The Arctic Tern breeds in summer in Arctic regions of North America. Where does the bird migrate to for the winter?',
         options: ['Africa', 'Antarctica', 'East Asia', 'Central America'],
