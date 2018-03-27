@@ -2,12 +2,12 @@
 $(document).ready(function() {
 
     var trivia = [
-        {question: 'This bird is popular in cooking, but the meal can give people "coturnism," which causes acute rhabdomyolysis, and is the result of this bird eating hemlock on migratory routes.', 
-        options: ['Goose', 'Duck', 'Turkey', 'Quail'],
+        {question: 'This bird is popular in cooking, but the meal can give people "coturnism," which causes muscle tenderness and vomiting, and is the result of this bird eating hemlock.', 
+        options: ['Goose', 'Duck', 'Quail', 'Turkey'],
         answer: 'Quail',
         image: 'assets/images/quail.jpg'}, 
 
-        {question: 'This bird is also known as the "butcherbird" due its habit of impaling insects and small mammals on thorns or barbed wire, to eat later.',
+        {question: 'This bird is also known as the "butcherbird" due its habit of impaling insects and small mammals on thorns or barbed wire, to save for later.',
         options: ['Nighthawk', 'Shrike', 'Kite', 'Phoebe'],
         answer: 'Shrike',
         image: 'assets/images/shrike.jpg'},
@@ -17,10 +17,20 @@ $(document).ready(function() {
         answer: 'New Zealand',
         image: 'assets/images/kea.jpg'},
 
-        {question: 'During the Four Pests Campaign, Mao Zedong commanded the people of China to scare them away by banging pots, and the birds flew until exhausted. As a result, agricultural pests exploded in population, and 35 million Chinese died of starvation.',
+        {question: 'During the Four Pests Campaign, Mao Zedong commanded the people of China to scare this bird away by banging pots, and the birds died from exhaustion. As a result, agricultural pests exploded in population, and 35 million Chinese died of starvation.',
         options: ['Finch', 'Seagull', 'Sparrow', 'Crane'],
         answer: 'Sparrow',
         image: 'assets/images/sparrow.jpg'},
+        
+        {question: 'The Arctic Tern breeds in summer in Arctic regions of North America. Where does the bird migrate to for the winter?',
+        options: ['Africa', 'Antarctica', 'East Asia', 'Central America'],
+        answer: 'Antarctica',
+        image: 'assets/images/tern.jpg'},
+
+        {question: 'This bird knows how to moonwalk.',
+        options: ['Manakin', 'Motmot', 'Potoo', 'Toucan'],
+        answer: 'Manakin',
+        image: 'assets/images/manakin.gif'},
 
         {question: 'Serious bird-watchers call themselves "birders," and many of them keep a "life-list" of all the species they have seen in their lifetime. On Earth, there are over 10,000 species of birds. How many species have the most prolific birders collected on their "life-lists"?',
         options: ['500', '3000', '6000', 'Over 9000'],
@@ -39,11 +49,15 @@ $(document).ready(function() {
     var timerID;
     var timerCount;
     var questionsCorrect;
+    var questionsIncorrect;
+    var questionsUnanswered;
 
     $('body').on('click', '.start', function() {
         //console.log('Game started.')
         triviaIndex = 0;
         questionsCorrect = 0;
+        questionsIncorrect = 0;
+        questionsUnanswered = 0;
         setTimeout(function() {
             $('.game').empty();
             $('.game').html(`<p class="timer"></p>`);
@@ -55,13 +69,14 @@ $(document).ready(function() {
     });
 
     function startClock() {
-        timerCount = 20;
+        timerCount = 15;
         clearInterval(timerID);
         $('.timer').text(`Time remaining: ${timerCount--} seconds.`);
         timerID = setInterval(function() {
             $('.timer').text(`Time remaining: ${timerCount--} seconds.`);
             if (timerCount<0) {
-                showAnswer('timeup');
+                showAnswer('time');
+                console.log('Out of time');
             }   
         }, 1000);
     }
@@ -79,10 +94,15 @@ $(document).ready(function() {
     });
 
     function showAnswer(userAnswer) {
-        if (userAnswer==='timeup') {
-            $('.board').html(`<h2>${questionIsCorrect(userAnswer)}</h2><p>You are out of time! The correct answer is ${trivia[triviaIndex].answer}.</p>`);
+        if (userAnswer==='time') {
+            $('.board').html(`<h2>Out of time.</h2><p>The correct answer is: ${trivia[triviaIndex].answer}.</p>`);
+            questionsUnanswered++;
+        } else if (userAnswer === trivia[triviaIndex].answer) {
+            $('.board').html(`<h2>Correct!</h2><p>${trivia[triviaIndex].answer}</p>`);
+            questionsCorrect++;
         } else {
-            $('.board').html(`<h2>${questionIsCorrect(userAnswer)}</h2><p>Your answer was ${userAnswer}. The correct answer is ${trivia[triviaIndex].answer}.</p>`);
+            $('.board').html(`<h2>Nope.</h2><p>The correct answer is: ${trivia[triviaIndex].answer}.</p>`);
+            questionsIncorrect++;
         }
         $('.board').append(`<div><img src="${trivia[triviaIndex].image}"></div>`);
         clearInterval(timerID);
@@ -92,25 +112,17 @@ $(document).ready(function() {
             if (!gameIsComplete()) {
                 renderTrivia();
             }
-        }, 2000);
+        }, 3000);
         
     }
 
     function gameIsComplete() {
         if (triviaIndex === trivia.length) {
-            $('.board').html(`Game Over. You got ${questionsCorrect} questions right out of ${trivia.length} questions.`);
+            $('.board').html(`<h2>Here is how you did.</h2><p>Right answers: ${questionsCorrect}</p><p>Wrong answers: ${questionsIncorrect}</p><p>Unanswered: ${questionsUnanswered}</p>`);
             clearInterval(timerID);
-            $('.board').append('<div><button class="start">New Game</button></div>');
+            $('.board').append('<div><button class="start">Start Over</button></div>');
             return true;
         } else {return false;}
     }
-
-    function questionIsCorrect(text) {
-        if (text === trivia[triviaIndex].answer) {
-            questionsCorrect++;
-            return 'Correct!';
-        } else return 'Nope!';
-    }
-
 
 });
